@@ -1,5 +1,7 @@
 import selenium.webdriver as webdriver
 from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 import time
 from bs4 import BeautifulSoup
 import os
@@ -8,12 +10,23 @@ def scrape_website(website):
     print("Launching chrome browser...")
 
     # chrome_driver_path = r"chromedriver.exe"
-    chrome_driver_path = os.path.join(os.getcwd(), 'chromedriver.exe')
-
-
-    options = webdriver.ChromeOptions()
     
-    driver = webdriver.Chrome(service=Service(chrome_driver_path),options=options)
+    # chrome_driver_path = os.path.join(os.getcwd(), 'chromedriver.exe')
+
+
+    # options = webdriver.ChromeOptions()
+    
+    # driver = webdriver.Chrome(service=Service(chrome_driver_path),options=options)
+
+    # Setup Chrome options
+    options = Options()
+    options.add_argument("--headless")  # Run in headless mode for server environments
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+
+    # Use webdriver_manager to install and set up ChromeDriver
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=options)
 
     try:
         driver.get(website)
